@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react"
-import dayGridPlugin from "@fullcalendar/daygrid" // a plugin!
+import timeGridPlugin from "@fullcalendar/timegrid"
 
 export interface CalendarViewProps {}
 
@@ -10,8 +10,8 @@ export const CalendarView = (props: CalendarViewProps) => {
         <FullCalendar
           height="100%"
           weekends
-          plugins={[dayGridPlugin]}
-          initialView="dayGridWeek"
+          plugins={[timeGridPlugin]}
+          initialView="timeGridWeek"
         />
       </div>
     </div>
