@@ -1,6 +1,4 @@
-import ViewProps from "./ViewProps"
-
-export interface CalendarViewProps extends ViewProps {}
+export interface CalendarViewProps {}
 
 export const CalendarView = (props: CalendarViewProps) => {
   return <></>
