@@ -1,10 +1,10 @@
 import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
-import { EventEntry } from "../types"
+import { CalendarDisplayEntry } from "../types"
 import { EventInput } from "@fullcalendar/core/index.js"
 
 export interface CalendarViewProps {
-  events?: EventEntry[]
+  events?: CalendarDisplayEntry[]
 }
 
 export const CalendarView = (props: CalendarViewProps) => {

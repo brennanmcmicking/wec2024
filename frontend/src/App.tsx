@@ -2,8 +2,11 @@ import "./App.css"
 import { CalendarView } from "./components/CalendarView"
 import { TaskView } from "./components/TaskView"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs"
+import { createUiSchedule } from "./libs/scheduling"
+import { store } from "./store"
+import { observer } from "mobx-react-lite"
 
-function App() {
+const App = observer(() => {
   return (
     <div className="App">
       <Tabs defaultValue="calendar" className="h-screen w-full">
@@ -19,7 +22,7 @@ function App() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="calendar" className="h-5/6">
-          <CalendarView />
+          <CalendarView events={createUiSchedule(store.events, store.tasks)} />
         </TabsContent>
         <TabsContent value="tasks">
           <TaskView />
@@ -27,6 +30,6 @@ function App() {
       </Tabs>
     </div>
   )
-}
+})
 
 export default App
