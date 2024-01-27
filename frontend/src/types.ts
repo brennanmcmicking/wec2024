@@ -18,6 +18,7 @@ export type EventEntry = {
   start: Moment
   end: Moment
   reoccuranceRule?: RecurranceRule
+  type?: "task" | "event"
 }
 
 export type TaskEntry = {
