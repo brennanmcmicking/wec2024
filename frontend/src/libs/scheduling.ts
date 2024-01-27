@@ -96,7 +96,7 @@ export function createUiSchedule(
 
     for (let i = 0; i < recurTimesEvent; i++) {
       let tempRecurEvent: CalendarDisplayEntry = {
-        id: event.id,
+        id: event.id + i * 100000,
         title: event.title,
         type: "event",
         start: nextRecuranceTime(
@@ -121,19 +121,22 @@ export function createUiSchedule(
   let newTasks: TaskEntry[] = []
   for (const task of tasks) {
     let recurTimesTask = task.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
-    let tempRecurTask: TaskEntry = task
 
     for (let i = 0; i < recurTimesTask; i++) {
-      newTasks.push(tempRecurTask)
-      tempRecurTask.deadline = nextRecuranceTime(
-        tempRecurTask.deadline,
-        tempRecurTask.reoccuranceRule || RecurranceRule.DAILY,
-      )
+      let tempRecurTask: TaskEntry = {
+        id: task.id,
+        title: task.title,
+        deadline: nextRecuranceTime(
+          task.deadline,
+          task.reoccuranceRule || RecurranceRule.DAILY,
+          i,
+        ),
+      }
     }
   }
   ///
   newTasks.sort(compareTaskEntry)
-  console.log(outputEvents)
+  // console.log(outputEvents)
   return outputEvents
 }
 
@@ -184,6 +187,9 @@ if (import.meta.vitest) {
     expect(out.length === RECURRANCE_DEPTH).toBeTruthy()
     expect(out[1].start.toString()).toStrictEqual(
       moment("0000-01-02T00:08:00Z").toString(),
+    )
+    expect(out[2].start.toString()).toStrictEqual(
+      moment("0000-01-03T00:08:00Z").toString(),
     )
   })
 }
