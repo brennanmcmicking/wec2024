@@ -8,6 +8,30 @@ export interface CalendarViewProps {
   events?: CalendarDisplayEntry[]
 }
 
+const mockData = [
+  {
+    id: "wec-design",
+    title: "WEC Design",
+    start: "2024-01-27 10:00",
+    end: "2024-01-27 19:00",
+    color: "blue",
+  },
+  {
+    id: "wec-present",
+    title: "WEC Presentation (placeholder)",
+    start: "2024-01-28 12:00",
+    end: "2024-01-28 12:45",
+    color: "blue",
+  },
+  {
+    id: "lunch-with-michael",
+    title: "Lunch with Michael Adams",
+    start: "2024-01-31 12:00",
+    end: "2024-01-31 13:00",
+    color: "blue",
+  },
+]
+
 export const CalendarView = (props: CalendarViewProps) => {
   const formatEvents = (): EventInput[] => {
     if (props.events) {
@@ -21,36 +45,7 @@ export const CalendarView = (props: CalendarViewProps) => {
         }
       })
     } else {
-      return [
-        {
-          id: "wec-design",
-          title: "WEC Design",
-          start: "2024-01-27 10:00",
-          end: "2024-01-27 19:00",
-          color: "blue",
-        },
-        {
-          id: "wec-present",
-          title: "WEC Presentation (placeholder)",
-          start: "2024-01-28 12:00",
-          end: "2024-01-28 12:45",
-          color: "blue",
-        },
-        // {
-        //   id: "youre-mom",
-        //   title: "Dinner with your mom",
-        //   start: "2024-01-27 19:00",
-        //   end: "2024-01-27 19:30",
-        //   color: "red",
-        // },
-        {
-          id: "lunch-with-michael",
-          title: "Lunch with Michael Adams",
-          start: "2024-01-31 12:00",
-          end: "2024-01-31 13:00",
-          color: "blue",
-        },
-      ]
+      return mockData
     }
   }
 
