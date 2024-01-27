@@ -1,4 +1,4 @@
-import moment from "moment"
+import moment, { Moment } from "moment"
 import {
   TaskEntry,
   EventEntry,
@@ -8,14 +8,26 @@ import {
 
 const RECURRANCE_DEPTH = 20
 
-function compareMoment(a: EventEntry, b: EventEntry): number {
-  if (a.start.isBefore(b.start)) {
+function compareMoment(a: Moment, b: Moment): number {
+  if (a.isBefore(b)) {
     return -1
-  } else if (a.start.isAfter(b.start)) {
+  } else if (a.isAfter(b)) {
     return 1
   } else {
     return 0
   }
+}
+
+function compareEventEntry(a: EventEntry, b: EventEntry): number {
+  return compareMoment(a.start, b.start)
+}
+
+function compareTaskEntry(a: TaskEntry, b: TaskEntry): number {
+  return compareMoment(a.deadline, b.deadline)
+}
+
+function nextRecuranceTime(date: Moment, rule: RecurranceRule): Moment {
+  return date.add("1" + rule)
 }
 
 /**
@@ -38,17 +50,40 @@ export function createUiSchedule(
 
   ///
   for (const event of events) {
-    let recurTimes = event.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
-    for (let i = 0; i < recurTimes; i++) {
-      let out: CalendarDisplayEntry = Object.assign({ type: "event" }, event)
-      outputEvents.push(out)
+    let recurTimesEvent = event.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
+    let tempRecurEvent: CalendarDisplayEntry = Object.assign(
+      { type: "event" },
+      event,
+    )
+
+    for (let i = 0; i < recurTimesEvent; i++) {
+      outputEvents.push(tempRecurEvent)
+      tempRecurEvent.start = nextRecuranceTime(
+        tempRecurEvent.start,
+        tempRecurEvent.reoccuranceRule || RecurranceRule.DAILY,
+      )
     }
   }
 
   ///
-  outputEvents.sort(compareMoment)
+  outputEvents.sort(compareEventEntry)
 
   ///
+  let newTasks: TaskEntry[] = []
+  for (const task of tasks) {
+    let recurTimesTask = task.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
+    let tempRecurTask: TaskEntry = task
+
+    for (let i = 0; i < recurTimesTask; i++) {
+      newTasks.push(tempRecurTask)
+      tempRecurTask.deadline = nextRecuranceTime(
+        tempRecurTask.deadline,
+        tempRecurTask.reoccuranceRule || RecurranceRule.DAILY,
+      )
+    }
+  }
+  ///
+  newTasks.sort(compareTaskEntry)
 
   return outputEvents
 }
@@ -95,7 +130,9 @@ if (import.meta.vitest) {
     ])
   })
 
-  test("Basic Recurrance", () => {
-    expect(createUiSchedule([basicRecurring], []).length === 20).toBeTruthy()
+  test("Basic event Recurrance", () => {
+    expect(
+      createUiSchedule([basicRecurring], []).length === RECURRANCE_DEPTH,
+    ).toBeTruthy()
   })
 }
