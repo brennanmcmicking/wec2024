@@ -1,4 +1,3 @@
-import "./App.css"
 import { CalendarView } from "./components/CalendarView"
 import { TaskView } from "./components/TaskView"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs"
@@ -17,14 +16,14 @@ const App = observer(() => {
           <TabsTrigger value="calendar" aria-label="Calendar tab selector">
             Calendar
           </TabsTrigger>
-          <TabsTrigger value="password" aria-label="Task tab selector">
+          <TabsTrigger value="tasks" aria-label="Task tab selector">
             Tasks
           </TabsTrigger>
         </TabsList>
         <TabsContent value="calendar" className="h-5/6">
           <CalendarView events={createUiSchedule(store.events, store.tasks)} />
         </TabsContent>
-        <TabsContent value="tasks">
+        <TabsContent value="tasks" className="mt-0 h-5/6">
           <TaskView />
         </TabsContent>
       </Tabs>
