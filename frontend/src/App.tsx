@@ -6,12 +6,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs"
 function App() {
   return (
     <div className="App">
-      <Tabs defaultValue="calendar" className="w-full">
+      <Tabs defaultValue="calendar" className="w-full h-screen">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="calendar">Calendar</TabsTrigger>
           <TabsTrigger value="password">Tasks</TabsTrigger>
         </TabsList>
-        <TabsContent value="calendar">
+        <TabsContent value="calendar" className="h-5/6">
           <CalendarView />
         </TabsContent>
         <TabsContent value="tasks">
