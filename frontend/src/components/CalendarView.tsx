@@ -59,7 +59,9 @@ export const CalendarView = (props: CalendarViewProps) => {
   return (
     <div id="calendar-view-container" className="flex h-full w-full gap-5 p-10">
       <div id="calendar-container" className="w-full">
-        <AddEventDialog />
+        <div className="grid place-content-center">
+          <AddEventDialog />
+        </div>
         <FullCalendar
           ref={calendarRef}
           height="100%"
