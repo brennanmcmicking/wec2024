@@ -4,6 +4,9 @@ import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 
+import { store } from "./store"
+;(window as any).store = store
+
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>
