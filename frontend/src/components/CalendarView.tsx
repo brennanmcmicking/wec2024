@@ -69,8 +69,9 @@ export const CalendarView = (props: CalendarViewProps) => {
           weekends
           eventInteractive={false}
           headerToolbar={{
+            start: "customPreviousButton",
             center: "title",
-            end: "customPreviousButton customNextButton",
+            end: "customNextButton",
           }}
           customButtons={{
             customPreviousButton: {

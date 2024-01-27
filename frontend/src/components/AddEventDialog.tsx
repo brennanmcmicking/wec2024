@@ -45,7 +45,7 @@ export const AddEventDialog = observer(() => {
           endRef.current.value = nowish().add("hour", 1).toISOString()
       }}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Add Event</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
