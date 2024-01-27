@@ -9,10 +9,19 @@ export const TaskView = (props: TaskViewProps) => {
   let hasWeeklyTasks = false
   let hasMonthlyTasks = false
 
+  let noRepeatingTasks = !hasDailyTasks && !hasWeeklyTasks && !hasMonthlyTasks
+
   return (
     <div>
       <div>
         <h1>Recurring Tasks</h1>
+        {noRepeatingTasks ? (
+          <div className="flex flex-col items-center justify-center p-10">
+            <p className="text-2xl font-semibold text-center">
+              No recurring tasks
+            </p>
+          </div>
+        ) : () }
       </div>
       <div>
         {/* recurring, one-off, single, unique */}

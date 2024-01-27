@@ -9,10 +9,6 @@ module.exports = {
   ],
   prefix: "",
   theme: {
-    colors: {
-      calendar: "#0000FF",
-      task: "#FF0000",
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -21,6 +17,10 @@ module.exports = {
       },
     },
     extend: {
+      colors: {
+        calendar: "#0000FF",
+        task: "#FF0000",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
