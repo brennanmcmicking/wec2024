@@ -1,12 +1,13 @@
 import { autorun, makeAutoObservable } from "mobx"
 import { GlobalState } from "./types"
 import moment from "moment"
+import { mockEvents, mockTasks } from "./mock/data"
 
 const LOCAL_STORAGE_STATE_KEY = "MICHEALS-ANGELS-STORE"
 
 const DEFAULT_STATE: GlobalState = {
-  events: [],
-  tasks: [],
+  events: mockEvents,
+  tasks: mockTasks,
   config: {
     workingHours: {
       start: 9,

@@ -18,7 +18,10 @@ export type EventEntry = {
   start: Moment
   end: Moment
   reoccuranceRule?: RecurranceRule
+  type?: "task" | "event"
 }
+
+export type CalendarDisplayEntry = EventEntry & { type: "event" | "task" }
 
 export type TaskEntry = {
   id: number
