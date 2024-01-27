@@ -36,6 +36,41 @@ function nextRecuranceTime(
   return out
 }
 
+function deepCloneArrayWithMoment(arr: any[]): any[] {
+  return arr.map((item) => {
+    if (moment.isMoment(item)) {
+      return item.clone()
+    } else if (Array.isArray(item)) {
+      return deepCloneArrayWithMoment(item)
+    } else if (typeof item === "object" && item !== null) {
+      return deepCloneObjectWithMoment(item)
+    } else {
+      return item
+    }
+  })
+}
+
+function deepCloneObjectWithMoment(obj: { [key: string]: any }): {
+  [key: string]: any
+} {
+  const clone: { [key: string]: any } = Array.isArray(obj) ? [] : {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key]
+      if (moment.isMoment(value)) {
+        clone[key] = value.clone()
+      } else if (Array.isArray(value)) {
+        clone[key] = deepCloneArrayWithMoment(value)
+      } else if (typeof value === "object" && value !== null) {
+        clone[key] = deepCloneObjectWithMoment(value)
+      } else {
+        clone[key] = value
+      }
+    }
+  }
+  return clone
+}
+
 /**
  * Algorithm steps:
  * - Expand all calendar events for recurrance rules
@@ -49,11 +84,12 @@ function nextRecuranceTime(
  *   - Insert task into outputEvents in that timeslot & remove from tasks list
  */
 export function createUiSchedule(
-  events: EventEntry[],
-  tasks: TaskEntry[],
+  eventsMut: EventEntry[],
+  tasksMut: TaskEntry[],
 ): CalendarDisplayEntry[] {
   let outputEvents: CalendarDisplayEntry[] = []
-
+  let events: EventEntry[] = deepCloneArrayWithMoment(eventsMut)
+  let tasks: TaskEntry[] = deepCloneArrayWithMoment(tasksMut)
   ///
   for (const event of events) {
     let recurTimesEvent = event.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
@@ -74,7 +110,6 @@ export function createUiSchedule(
           i,
         ),
       }
-      console.log(tempRecurEvent)
       outputEvents.push(tempRecurEvent)
     }
   }
@@ -98,7 +133,7 @@ export function createUiSchedule(
   }
   ///
   newTasks.sort(compareTaskEntry)
-
+  console.log(outputEvents)
   return outputEvents
 }
 
