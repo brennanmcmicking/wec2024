@@ -26,8 +26,14 @@ function compareTaskEntry(a: TaskEntry, b: TaskEntry): number {
   return compareMoment(a.deadline, b.deadline)
 }
 
-function nextRecuranceTime(date: Moment, rule: RecurranceRule): Moment {
-  return date.add("1" + rule)
+function nextRecuranceTime(
+  date: Moment,
+  rule: RecurranceRule,
+  times: number,
+): Moment {
+  let out = moment(date).add(times, rule)
+  // console.log("INCREAING:", date, rule, times, out)
+  return out
 }
 
 /**
@@ -51,17 +57,25 @@ export function createUiSchedule(
   ///
   for (const event of events) {
     let recurTimesEvent = event.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
-    let tempRecurEvent: CalendarDisplayEntry = Object.assign(
-      { type: "event" },
-      event,
-    )
 
     for (let i = 0; i < recurTimesEvent; i++) {
+      let tempRecurEvent: CalendarDisplayEntry = {
+        id: event.id,
+        title: event.title,
+        type: "event",
+        start: nextRecuranceTime(
+          event.start,
+          event.reoccuranceRule || RecurranceRule.DAILY,
+          i,
+        ),
+        end: nextRecuranceTime(
+          event.end,
+          event.reoccuranceRule || RecurranceRule.DAILY,
+          i,
+        ),
+      }
+      console.log(tempRecurEvent)
       outputEvents.push(tempRecurEvent)
-      tempRecurEvent.start = nextRecuranceTime(
-        tempRecurEvent.start,
-        tempRecurEvent.reoccuranceRule || RecurranceRule.DAILY,
-      )
     }
   }
 
@@ -131,8 +145,10 @@ if (import.meta.vitest) {
   })
 
   test("Basic event Recurrance", () => {
-    expect(
-      createUiSchedule([basicRecurring], []).length === RECURRANCE_DEPTH,
-    ).toBeTruthy()
+    let out = createUiSchedule([basicRecurring], [])
+    expect(out.length === RECURRANCE_DEPTH).toBeTruthy()
+    expect(out[1].start.toString()).toStrictEqual(
+      moment("0000-01-02T00:08:00Z").toString(),
+    )
   })
 }
