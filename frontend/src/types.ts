@@ -21,6 +21,8 @@ export type EventEntry = {
   type?: "task" | "event"
 }
 
+export type CalendarDisplayEntry = EventEntry & { type: "event" | "task" }
+
 export type TaskEntry = {
   id: number
   title: string
