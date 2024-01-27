@@ -11,10 +11,10 @@ export const mockTasks: TaskEntry[] = [
   },
   {
     id: 1,
-    title: "Task 1",
-    durationEstimate: moment.duration(3, "h"),
-    deadline: moment({ month: 0, day: 29, hour: 17 }),
-    priority: Priority.MEDIUM,
+    title: "ECE 260 Assignment",
+    durationEstimate: moment.duration(6, "h"),
+    deadline: moment({ month: 1, day: 3, hour: 17 }),
+    priority: Priority.HIGH,
   },
   {
     id: 2,

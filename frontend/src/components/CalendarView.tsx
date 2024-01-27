@@ -3,6 +3,7 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import { AddEventDialog } from "./AddEventDialog"
 import { CalendarDisplayEntry } from "../types"
 import { EventInput } from "@fullcalendar/core/index.js"
+import { createRef, useRef } from "react"
 
 export interface CalendarViewProps {
   events?: CalendarDisplayEntry[]
@@ -33,9 +34,13 @@ const mockData = [
 ]
 
 export const CalendarView = (props: CalendarViewProps) => {
+  const calendarRef = createRef<FullCalendar>()
+
   const formatEvents = (): EventInput[] => {
     if (props.events) {
-      return props.events.map((event) => {
+      console.log("using real event data")
+      console.log(props.events)
+      const res = props.events.map((event) => {
         return {
           id: event.id.toString(),
           title: event.title,
@@ -44,6 +49,8 @@ export const CalendarView = (props: CalendarViewProps) => {
           color: event.type === "event" ? "blue" : "red",
         }
       })
+      console.log(res)
+      return res
     } else {
       return mockData
     }
@@ -54,12 +61,33 @@ export const CalendarView = (props: CalendarViewProps) => {
       <div id="calendar-container" className="w-full">
         <AddEventDialog />
         <FullCalendar
+          ref={calendarRef}
           height="100%"
           plugins={[timeGridPlugin]}
           initialView="timeGridWeek"
           events={formatEvents()}
           weekends
           eventInteractive={false}
+          headerToolbar={{
+            center: "title",
+            end: "customPreviousButton customNextButton",
+          }}
+          customButtons={{
+            customPreviousButton: {
+              text: "Previous",
+              click: () => {
+                let calendarApi = calendarRef.current?.getApi()
+                calendarApi?.prev()
+              },
+            },
+            customNextButton: {
+              text: "Next",
+              click: () => {
+                let calendarApi = calendarRef.current?.getApi()
+                calendarApi?.next()
+              },
+            },
+          }}
         />
       </div>
     </div>
