@@ -1,53 +1,53 @@
-import moment, { duration } from "moment"
+import moment from "moment"
 import { EventEntry, Priority, RecurranceRule, TaskEntry } from "../types"
 
 export const mockTasks: TaskEntry[] = [
   {
     id: 0,
     title: "Task 0",
-    durationEstimate: duration(1, "h"),
+    durationEstimate: moment.duration(1, "h"),
     deadline: moment({ month: 1, day: 28, hour: 12 }),
     priority: Priority.MEDIUM,
   },
   {
     id: 1,
     title: "Task 1",
-    durationEstimate: duration(3, "h"),
+    durationEstimate: moment.duration(3, "h"),
     deadline: moment({ month: 1, day: 29, hour: 17 }),
     priority: Priority.MEDIUM,
   },
   {
     id: 2,
     title: "Task 2",
-    durationEstimate: duration(20, "m"),
+    durationEstimate: moment.duration(20, "m"),
     deadline: moment({ month: 2, day: 1, hour: 17 }),
     priority: Priority.HIGH,
   },
   {
     id: 3,
     title: "Task 3",
-    durationEstimate: duration(7, "h"),
+    durationEstimate: moment.duration(7, "h"),
     deadline: moment({ month: 2, day: 1, hour: 9 }),
     priority: Priority.MEDIUM,
   },
   {
     id: 4,
     title: "Task 4",
-    durationEstimate: duration(1, "h"),
+    durationEstimate: moment.duration(1, "h"),
     deadline: moment({ month: 2, day: 3, hour: 17 }),
     priority: Priority.LOW,
   },
   {
     id: 5,
     title: "Task 5",
-    durationEstimate: duration(4, "h"),
+    durationEstimate: moment.duration(4, "h"),
     deadline: moment({ month: 2, day: 4, hour: 12 }),
     priority: Priority.MEDIUM,
   },
   {
     id: 6,
     title: "Task 6",
-    durationEstimate: duration(45, "m"),
+    durationEstimate: moment.duration(45, "m"),
     deadline: moment({ month: 2, day: 5, hour: 17 }),
     priority: Priority.MEDIUM,
   },
@@ -55,7 +55,7 @@ export const mockTasks: TaskEntry[] = [
   {
     id: 7,
     title: "Task 7",
-    durationEstimate: duration(45, "m"),
+    durationEstimate: moment.duration(45, "m"),
     deadline: moment({ month: 2, day: 5, hour: 17 }),
     priority: Priority.MEDIUM,
     reoccuranceRule: RecurranceRule.WEEKLY,
@@ -63,7 +63,7 @@ export const mockTasks: TaskEntry[] = [
   {
     id: 8,
     title: "Yoga",
-    durationEstimate: duration(30, "m"),
+    durationEstimate: moment.duration(30, "m"),
     deadline: moment({ month: 2, day: 5, hour: 17 }),
     priority: Priority.MEDIUM,
     reoccuranceRule: RecurranceRule.DAILY,
