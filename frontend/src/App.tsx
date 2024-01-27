@@ -13,10 +13,18 @@ const App = observer(() => {
           className="grid w-full grid-cols-2"
           aria-label="Calendar and Task selection bar"
         >
-          <TabsTrigger value="calendar" aria-label="Calendar tab selector">
+          <TabsTrigger
+            className="data-[state=active]:bg-event data-[state=active]:text-white"
+            value="calendar"
+            aria-label="Calendar tab selector"
+          >
             Calendar
           </TabsTrigger>
-          <TabsTrigger value="tasks" aria-label="Task tab selector">
+          <TabsTrigger
+            className="data-[state=active]:bg-task data-[state=active]:text-white"
+            value="tasks"
+            aria-label="Task tab selector"
+          >
             Tasks
           </TabsTrigger>
         </TabsList>
