@@ -1,18 +1,18 @@
 import type { Moment, Duration } from "moment"
 
-enum Priority {
+export enum Priority {
   LOW = 0,
   MEDIUM = 1,
   HIGH = 2,
 }
 
-enum RecurranceRule {
+export enum RecurranceRule {
   DAILY,
   WEEKLY,
   MONTHLY,
 }
 
-type EventEntry = {
+export type EventEntry = {
   id: number
   title: string
   start: Moment
@@ -20,7 +20,7 @@ type EventEntry = {
   reoccuranceRule?: RecurranceRule
 }
 
-type TaskEntry = {
+export type TaskEntry = {
   id: number
   title: string
   durationEstimate: Duration
@@ -29,14 +29,14 @@ type TaskEntry = {
   reoccuranceRule?: RecurranceRule
 }
 
-type Config = {
+export type Config = {
   workingHours: {
     start: number
     end: number
   }
 }
 
-type GlobalState = {
+export type GlobalState = {
   tasks: TaskEntry[]
   events: EventEntry[]
   config: Config
