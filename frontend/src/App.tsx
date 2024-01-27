@@ -1,30 +1,32 @@
-import React, { useState } from "react";
-import "./App.css";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
-import { CalendarView } from "./components/CalendarView";
-import { TaskView } from "./components/TaskView";
+import React, { useState } from "react"
+import "./App.css"
+import { CalendarView } from "./components/CalendarView"
+import { TaskView } from "./components/TaskView"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs"
 
 function App() {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0)
 
   const handleTabClick = (event: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
-  };
+    setTabIndex(newValue)
+  }
 
   return (
     <div className="App">
-      <Box width="100%">
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={tabIndex} onChange={handleTabClick}>
-            <Tab label="Calendar" />
-            <Tab label="Tasks" />
-          </Tabs>
-        </Box>
-        <CalendarView hidden={tabIndex !== 0} />
-        <TaskView hidden={tabIndex !== 1} />
-      </Box>
+      <Tabs defaultValue="calendar" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="calendar">Calendar</TabsTrigger>
+          <TabsTrigger value="password">Tasks</TabsTrigger>
+        </TabsList>
+        <TabsContent value="calendar">
+          <CalendarView />
+        </TabsContent>
+        <TabsContent value="tasks">
+          <TaskView />
+        </TabsContent>
+      </Tabs>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

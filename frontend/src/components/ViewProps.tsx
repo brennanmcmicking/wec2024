@@ -1,5 +1,1 @@
-
-
-export default interface ViewProps {
-    hidden: boolean;
-}
+export default interface ViewProps {}
