@@ -61,7 +61,7 @@ export const TaskView = observer(() => {
   let noRepeatingTasks = !hasDailyTasks && !hasWeeklyTasks && !hasMonthlyTasks
 
   return (
-    <div>
+    <div className="bg-red-400 px-16">
       <div>
         <h1>Recurring Tasks</h1>
         {noRepeatingTasks ? (
