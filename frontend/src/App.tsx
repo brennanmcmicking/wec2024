@@ -23,7 +23,7 @@ const App = observer(() => {
         <TabsContent value="calendar" className="h-5/6">
           <CalendarView events={createUiSchedule(store.events, store.tasks)} />
         </TabsContent>
-        <TabsContent value="tasks" className="mt-0 h-5/6">
+        <TabsContent value="tasks" className="mt-0 h-[93.33333333%]">
           <TaskView />
         </TabsContent>
       </Tabs>
