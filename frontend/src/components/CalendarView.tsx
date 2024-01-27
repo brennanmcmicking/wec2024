@@ -46,7 +46,7 @@ export const CalendarView = (props: CalendarViewProps) => {
           title: event.title,
           start: event.start.toISOString(),
           end: event.end.toISOString(),
-          color: event.type === "event" ? "blue" : "red",
+          color: event.type === "event" ? "bg-calendar" : "bg-task",
         }
       })
       console.log(res)
