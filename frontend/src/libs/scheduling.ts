@@ -1,4 +1,4 @@
-import moment from "moment"
+import moment, { Moment } from "moment"
 import {
   TaskEntry,
   EventEntry,
@@ -8,14 +8,32 @@ import {
 
 const RECURRANCE_DEPTH = 20
 
-function compareMoment(a: EventEntry, b: EventEntry): number {
-  if (a.start.isBefore(b.start)) {
+function compareMoment(a: Moment, b: Moment): number {
+  if (a.isBefore(b)) {
     return -1
-  } else if (a.start.isAfter(b.start)) {
+  } else if (a.isAfter(b)) {
     return 1
   } else {
     return 0
   }
+}
+
+function compareEventEntry(a: EventEntry, b: EventEntry): number {
+  return compareMoment(a.start, b.start)
+}
+
+function compareTaskEntry(a: TaskEntry, b: TaskEntry): number {
+  return compareMoment(a.deadline, b.deadline)
+}
+
+function nextRecuranceTime(
+  date: Moment,
+  rule: RecurranceRule,
+  times: number,
+): Moment {
+  let out = moment(date).add(times, rule)
+  // console.log("INCREAING:", date, rule, times, out)
+  return out
 }
 
 /**
@@ -38,17 +56,48 @@ export function createUiSchedule(
 
   ///
   for (const event of events) {
-    let recurTimes = event.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
-    for (let i = 0; i < recurTimes; i++) {
-      let out: CalendarDisplayEntry = Object.assign({ type: "event" }, event)
-      outputEvents.push(out)
+    let recurTimesEvent = event.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
+
+    for (let i = 0; i < recurTimesEvent; i++) {
+      let tempRecurEvent: CalendarDisplayEntry = {
+        id: event.id,
+        title: event.title,
+        type: "event",
+        start: nextRecuranceTime(
+          event.start,
+          event.reoccuranceRule || RecurranceRule.DAILY,
+          i,
+        ),
+        end: nextRecuranceTime(
+          event.end,
+          event.reoccuranceRule || RecurranceRule.DAILY,
+          i,
+        ),
+      }
+      console.log(tempRecurEvent)
+      outputEvents.push(tempRecurEvent)
     }
   }
 
   ///
-  outputEvents.sort(compareMoment)
+  outputEvents.sort(compareEventEntry)
 
   ///
+  let newTasks: TaskEntry[] = []
+  for (const task of tasks) {
+    let recurTimesTask = task.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
+    let tempRecurTask: TaskEntry = task
+
+    for (let i = 0; i < recurTimesTask; i++) {
+      newTasks.push(tempRecurTask)
+      tempRecurTask.deadline = nextRecuranceTime(
+        tempRecurTask.deadline,
+        tempRecurTask.reoccuranceRule || RecurranceRule.DAILY,
+      )
+    }
+  }
+  ///
+  newTasks.sort(compareTaskEntry)
 
   return outputEvents
 }
@@ -95,7 +144,11 @@ if (import.meta.vitest) {
     ])
   })
 
-  test("Basic Recurrance", () => {
-    expect(createUiSchedule([basicRecurring], []).length === 20).toBeTruthy()
+  test("Basic event Recurrance", () => {
+    let out = createUiSchedule([basicRecurring], [])
+    expect(out.length === RECURRANCE_DEPTH).toBeTruthy()
+    expect(out[1].start.toString()).toStrictEqual(
+      moment("0000-01-02T00:08:00Z").toString(),
+    )
   })
 }

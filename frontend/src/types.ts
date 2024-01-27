@@ -7,9 +7,9 @@ export enum Priority {
 }
 
 export enum RecurranceRule {
-  DAILY,
-  WEEKLY,
-  MONTHLY,
+  DAILY = "days",
+  WEEKLY = "weeks",
+  MONTHLY = "months",
 }
 
 export type EventEntry = {
