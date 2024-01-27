@@ -21,7 +21,7 @@ export const TaskView = (props: TaskViewProps) => {
               No recurring tasks
             </p>
           </div>
-        ) : () }
+        ) : null }
       </div>
       <div>
         {/* recurring, one-off, single, unique */}
