@@ -18,8 +18,8 @@ module.exports = {
     },
     extend: {
       colors: {
-        calendar: "#0000FF",
-        task: "#FF0000",
+        event: "#09265e",
+        task: "#e84c4b",
       },
       keyframes: {
         "accordion-down": {
