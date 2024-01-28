@@ -166,12 +166,30 @@ export function createUiSchedule(
         nextEventStart: nextEventStart.toISOString(),
       })
 
-      if (
-        task.durationEstimate > moment.duration(nextEventStart.diff(thisEventEnd))
-      ) {
+      let thisEvent = outputEvents[i].title
+      let nextEvent = outputEvents[i + 1].title
+
+      let availTime = moment.duration(nextEventStart.diff(thisEventEnd))
+      console.log({
+        est: task.durationEstimate,
+        avail: moment.duration(nextEventStart.diff(thisEventEnd)),
+        diff:
+          task.durationEstimate > moment.duration(nextEventStart.diff(thisEventEnd)),
+      })
+
+      if (task.durationEstimate._milliseconds > availTime._milliseconds) {
         console.log("Skipping bc not enough time")
         continue
       }
+
+      console.log(
+        "there is " +
+          availTime +
+          " between events " +
+          thisEvent +
+          " and " +
+          nextEvent,
+      )
 
       // let newStart =
       let newEnd = moment(thisEventEnd).add(
@@ -186,12 +204,18 @@ export function createUiSchedule(
         end: newEnd,
         type: "task",
       }
+      console.log(
+        "adding new event " +
+          createdEvent.title +
+          " after event " +
+          outputEvents[i].title,
+      )
       outputEvents.splice(i + 1, 0, createdEvent)
       break
     }
   }
 
-  console.log(moment())
+  console.log("NOW", moment().toISOString())
   console.log(outputEvents)
   return outputEvents
 }
