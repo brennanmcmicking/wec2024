@@ -17,4 +17,4 @@ Currently, two official plugins are available:
 
 # Technologies
 
-We use [shadcn]() and [FullCalendar.js]() for UI components
+We use [shadcn](https://ui.shadcn.com/) and [FullCalendar.js](https://fullcalendar.io/docs/react) for UI components

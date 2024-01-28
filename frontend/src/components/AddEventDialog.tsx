@@ -30,9 +30,13 @@ function nowish(): Moment {
 }
 
 export const AddEventDialog = observer(() => {
+  // refs are used to implement custom logic in library components
   const titleRef = useRef<HTMLInputElement | null>(null)
   const startRef = useRef<HTMLInputElement | null>(null)
   const endRef = useRef<HTMLInputElement | null>(null)
+
+  // setRule is used to tell React to re-render the UI when rule changes
+  // for more information, check out https://react.dev/reference/react/useState
   const [rule, setRule] = useState<undefined | RecurranceRule>(undefined)
 
   return (
@@ -108,6 +112,8 @@ export const AddEventDialog = observer(() => {
             <Button
               type="submit"
               onClick={action((e) => {
+                // if any of these elements don't exist,
+                // act as if the button does not exist
                 if (titleRef.current === null) {
                   e.preventDefault()
                   return
@@ -120,6 +126,9 @@ export const AddEventDialog = observer(() => {
                   e.preventDefault()
                   return
                 }
+
+                // add an event with a random id and the given title,
+                // start, end, and recurrence rule
                 store.events.push({
                   id: Math.floor(Math.random() * 10000000),
                   title: titleRef.current.value,
