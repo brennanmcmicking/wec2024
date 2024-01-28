@@ -4,6 +4,7 @@ import {
   EventEntry,
   RecurranceRule,
   CalendarDisplayEntry,
+  Priority,
 } from "../types"
 
 const RECURRANCE_DEPTH = 20
@@ -116,9 +117,8 @@ export function createUiSchedule(
 
   ///
   outputEvents.sort(compareEventEntry)
-
   ///
-  let newTasks: TaskEntry[] = []
+  let allTasks: TaskEntry[] = []
   for (const task of tasks) {
     let recurTimesTask = task.reoccuranceRule !== undefined ? RECURRANCE_DEPTH : 1
 
@@ -131,12 +131,92 @@ export function createUiSchedule(
           task.reoccuranceRule || RecurranceRule.DAILY,
           i,
         ),
+        durationEstimate: task.durationEstimate,
+        priority: task.priority,
       }
+      allTasks.push(tempRecurTask)
     }
   }
+
   ///
-  newTasks.sort(compareTaskEntry)
-  // console.log(outputEvents)
+  allTasks.sort(compareTaskEntry)
+
+  ///
+  const startSearchingAt = moment()
+
+  for (const task of tasks) {
+    console.log(outputEvents)
+    for (let i = 0; i < outputEvents.length; i++) {
+      let thisEventEnd = outputEvents[i].end
+      let nextEventStart =
+        outputEvents.length > i + 1
+          ? outputEvents[i + 1].start
+          : moment(outputEvents[i].end).add(1, "year")
+
+      if (
+        !startSearchingAt.isBefore(thisEventEnd) &&
+        startSearchingAt.isAfter(nextEventStart)
+      ) {
+        console.log("Skipping bc before")
+        continue
+      }
+
+      console.log({
+        thisEventEnd: thisEventEnd.toISOString(),
+        nextEventStart: nextEventStart.toISOString(),
+      })
+
+      let thisEvent = outputEvents[i].title
+      let nextEvent = outputEvents[i + 1].title
+
+      let availTime = moment.duration(nextEventStart.diff(thisEventEnd))
+      console.log({
+        est: task.durationEstimate,
+        avail: moment.duration(nextEventStart.diff(thisEventEnd)),
+        diff:
+          task.durationEstimate > moment.duration(nextEventStart.diff(thisEventEnd)),
+      })
+
+      if (task.durationEstimate._milliseconds > availTime._milliseconds) {
+        console.log("Skipping bc not enough time")
+        continue
+      }
+
+      console.log(
+        "there is " +
+          availTime +
+          " between events " +
+          thisEvent +
+          " and " +
+          nextEvent,
+      )
+
+      // let newStart =
+      let newEnd = moment(thisEventEnd).add(
+        task.durationEstimate._milliseconds,
+        "milliseconds",
+      )
+
+      let createdEvent: CalendarDisplayEntry = {
+        id: task.id,
+        title: task.title,
+        start: outputEvents[i].end,
+        end: newEnd,
+        type: "task",
+      }
+      console.log(
+        "adding new event " +
+          createdEvent.title +
+          " after event " +
+          outputEvents[i].title,
+      )
+      outputEvents.splice(i + 1, 0, createdEvent)
+      break
+    }
+  }
+
+  console.log("NOW", moment().toISOString())
+  console.log(outputEvents)
   return outputEvents
 }
 
@@ -162,6 +242,14 @@ if (import.meta.vitest) {
     type: "event",
   }
 
+  const eventInFuture: EventEntry = {
+    id: 3,
+    title: "Future",
+    start: moment("2300-01-01T00:02:00Z"),
+    end: moment("2300-01-01T00:03:00Z"),
+    type: "event",
+  }
+
   const basicRecurring: EventEntry = {
     id: 1,
     title: "test",
@@ -169,6 +257,14 @@ if (import.meta.vitest) {
     end: moment("0000-01-01T00:09:00Z"),
     type: "event",
     reoccuranceRule: RecurranceRule.DAILY,
+  }
+
+  const basicTask: TaskEntry = {
+    id: 1,
+    title: "Do Task",
+    deadline: moment("0000-01-01T00:09:00Z"),
+    durationEstimate: moment.duration(1, "hour"),
+    priority: Priority.LOW,
   }
 
   test("Copies events", () => {
@@ -190,6 +286,15 @@ if (import.meta.vitest) {
     )
     expect(out[2].start.toString()).toStrictEqual(
       moment("0000-01-03T00:08:00Z").toString(),
+    )
+  })
+
+  test("Basic task", () => {
+    let out = createUiSchedule([basicEvent1, eventInFuture], [basicTask])
+    console.log(out)
+    expect(out.length === 2).toBeTruthy()
+    expect(out[0].start.toString()).toStrictEqual(
+      moment("0000-01-02T00:08:00Z").toString(),
     )
   })
 }
