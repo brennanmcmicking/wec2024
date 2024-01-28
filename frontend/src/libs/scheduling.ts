@@ -9,68 +9,6 @@ import {
 
 const RECURRANCE_DEPTH = 20
 
-function compareMoment(a: Moment, b: Moment): number {
-  if (a.isBefore(b)) {
-    return -1
-  } else if (a.isAfter(b)) {
-    return 1
-  } else {
-    return 0
-  }
-}
-
-function compareEventEntry(a: EventEntry, b: EventEntry): number {
-  return compareMoment(a.start, b.start)
-}
-
-function compareTaskEntry(a: TaskEntry, b: TaskEntry): number {
-  return compareMoment(a.deadline, b.deadline)
-}
-
-function nextRecuranceTime(
-  date: Moment,
-  rule: RecurranceRule,
-  times: number,
-): Moment {
-  let out = moment(date).add(times, rule)
-  return out
-}
-
-function deepCloneArrayWithMoment(arr: any[]): any[] {
-  return arr.map((item) => {
-    if (moment.isMoment(item)) {
-      return item.clone()
-    } else if (Array.isArray(item)) {
-      return deepCloneArrayWithMoment(item)
-    } else if (typeof item === "object" && item !== null) {
-      return deepCloneObjectWithMoment(item)
-    } else {
-      return item
-    }
-  })
-}
-
-function deepCloneObjectWithMoment(obj: { [key: string]: any }): {
-  [key: string]: any
-} {
-  const clone: { [key: string]: any } = Array.isArray(obj) ? [] : {}
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      const value = obj[key]
-      if (moment.isMoment(value)) {
-        clone[key] = value.clone()
-      } else if (Array.isArray(value)) {
-        clone[key] = deepCloneArrayWithMoment(value)
-      } else if (typeof value === "object" && value !== null) {
-        clone[key] = deepCloneObjectWithMoment(value)
-      } else {
-        clone[key] = value
-      }
-    }
-  }
-  return clone
-}
-
 /**
  * Algorithm steps:
  * - Expand all calendar events for recurrance rules
@@ -79,9 +17,9 @@ function deepCloneObjectWithMoment(obj: { [key: string]: any }): {
  * - Expand Tasks for recurrance rules
  * - Sort Tasks by earliest deadline first
  * - Insert tasks into outputEvents
- *   - Find first available open slot in outputEvents
- *   - iterate through tasks list until find first task that can fit in that time spot
- *   - Insert task into outputEvents in that timeslot & remove from tasks list
+ *   - Find first available open slot in for the task to insert
+ *   - iterate through open slots until it can fit in that time spot
+ *   - Insert task into outputEvents in that timeslot
  */
 export function createUiSchedule(
   eventsMut: EventEntry[],
@@ -187,6 +125,68 @@ export function createUiSchedule(
   }
 
   return outputEvents
+}
+
+function compareMoment(a: Moment, b: Moment): number {
+  if (a.isBefore(b)) {
+    return -1
+  } else if (a.isAfter(b)) {
+    return 1
+  } else {
+    return 0
+  }
+}
+
+function compareEventEntry(a: EventEntry, b: EventEntry): number {
+  return compareMoment(a.start, b.start)
+}
+
+function compareTaskEntry(a: TaskEntry, b: TaskEntry): number {
+  return compareMoment(a.deadline, b.deadline)
+}
+
+function nextRecuranceTime(
+  date: Moment,
+  rule: RecurranceRule,
+  times: number,
+): Moment {
+  let out = moment(date).add(times, rule)
+  return out
+}
+
+function deepCloneArrayWithMoment(arr: any[]): any[] {
+  return arr.map((item) => {
+    if (moment.isMoment(item)) {
+      return item.clone()
+    } else if (Array.isArray(item)) {
+      return deepCloneArrayWithMoment(item)
+    } else if (typeof item === "object" && item !== null) {
+      return deepCloneObjectWithMoment(item)
+    } else {
+      return item
+    }
+  })
+}
+
+function deepCloneObjectWithMoment(obj: { [key: string]: any }): {
+  [key: string]: any
+} {
+  const clone: { [key: string]: any } = Array.isArray(obj) ? [] : {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key]
+      if (moment.isMoment(value)) {
+        clone[key] = value.clone()
+      } else if (Array.isArray(value)) {
+        clone[key] = deepCloneArrayWithMoment(value)
+      } else if (typeof value === "object" && value !== null) {
+        clone[key] = deepCloneObjectWithMoment(value)
+      } else {
+        clone[key] = value
+      }
+    }
+  }
+  return clone
 }
 
 /**
