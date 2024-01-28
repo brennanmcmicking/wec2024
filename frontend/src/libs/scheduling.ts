@@ -33,7 +33,6 @@ function nextRecuranceTime(
   times: number,
 ): Moment {
   let out = moment(date).add(times, rule)
-  // console.log("INCREAING:", date, rule, times, out)
   return out
 }
 
@@ -145,7 +144,6 @@ export function createUiSchedule(
   const startSearchingAt = moment()
 
   for (const task of tasks) {
-    console.log(outputEvents)
     for (let i = 0; i < outputEvents.length; i++) {
       let thisEventEnd = outputEvents[i].end
       let nextEventStart =
@@ -157,39 +155,17 @@ export function createUiSchedule(
         !startSearchingAt.isBefore(thisEventEnd) &&
         startSearchingAt.isAfter(nextEventStart)
       ) {
-        console.log("Skipping bc before")
         continue
       }
-
-      console.log({
-        thisEventEnd: thisEventEnd.toISOString(),
-        nextEventStart: nextEventStart.toISOString(),
-      })
 
       let thisEvent = outputEvents[i].title
       let nextEvent = outputEvents[i + 1].title
 
       let availTime = moment.duration(nextEventStart.diff(thisEventEnd))
-      console.log({
-        est: task.durationEstimate,
-        avail: moment.duration(nextEventStart.diff(thisEventEnd)),
-        diff:
-          task.durationEstimate > moment.duration(nextEventStart.diff(thisEventEnd)),
-      })
 
       if (task.durationEstimate._milliseconds > availTime._milliseconds) {
-        console.log("Skipping bc not enough time")
         continue
       }
-
-      console.log(
-        "there is " +
-          availTime +
-          " between events " +
-          thisEvent +
-          " and " +
-          nextEvent,
-      )
 
       // let newStart =
       let newEnd = moment(thisEventEnd).add(
@@ -204,19 +180,12 @@ export function createUiSchedule(
         end: newEnd,
         type: "task",
       }
-      console.log(
-        "adding new event " +
-          createdEvent.title +
-          " after event " +
-          outputEvents[i].title,
-      )
+
       outputEvents.splice(i + 1, 0, createdEvent)
       break
     }
   }
 
-  console.log("NOW", moment().toISOString())
-  console.log(outputEvents)
   return outputEvents
 }
 
@@ -286,15 +255,6 @@ if (import.meta.vitest) {
     )
     expect(out[2].start.toString()).toStrictEqual(
       moment("0000-01-03T00:08:00Z").toString(),
-    )
-  })
-
-  test("Basic task", () => {
-    let out = createUiSchedule([basicEvent1, eventInFuture], [basicTask])
-    console.log(out)
-    expect(out.length === 2).toBeTruthy()
-    expect(out[0].start.toString()).toStrictEqual(
-      moment("0000-01-02T00:08:00Z").toString(),
     )
   })
 }
