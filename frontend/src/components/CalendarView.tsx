@@ -37,21 +37,24 @@ export const CalendarView = (props: CalendarViewProps) => {
   const calendarRef = createRef<FullCalendar>()
 
   const formatEvents = (): EventInput[] => {
+    // if we've been given a list of events, map them to the format expected by
+    // the FullCalendar component and then pass them along
     if (props.events) {
-      console.log("using real event data")
-      console.log(props.events)
+      // console.log("using real event data")
+      // console.log(props.events)
       const res = props.events.map((event) => {
         return {
-          id: event.id.toString(),
+          id: event.id.toString(), // the task scheduler stores event ids as numbers, but the calendar wants string
           title: event.title,
-          start: event.start.toISOString(),
-          end: event.end.toISOString(),
-          color: event.type === "event" ? "#09265e" : "#e84c4b",
+          start: event.start.toISOString(), // Moment --> ISO string
+          end: event.end.toISOString(), // Moment --> ISO string
+          color: event.type === "event" ? "#09265e" : "#e84c4b", // tasks and events have different colours to allow for easy differentiation
         }
       })
-      console.log(res)
+      // console.log(res)
       return res
     } else {
+      // if we were not passed any data, use the mock data above
       return mockData
     }
   }
@@ -79,6 +82,7 @@ export const CalendarView = (props: CalendarViewProps) => {
             customPreviousButton: {
               text: "Previous",
               click: () => {
+                // use the calendarRef to go to the previous page
                 let calendarApi = calendarRef.current?.getApi()
                 calendarApi?.prev()
               },
@@ -86,6 +90,7 @@ export const CalendarView = (props: CalendarViewProps) => {
             customNextButton: {
               text: "Next",
               click: () => {
+                // use the calendarRef to go to the next page
                 let calendarApi = calendarRef.current?.getApi()
                 calendarApi?.next()
               },

@@ -1,6 +1,14 @@
 import moment from "moment"
 import { EventEntry, Priority, RecurranceRule, TaskEntry } from "../types"
 
+/**
+ * This is mock data for use on the calendar.
+ * Each task must have an id, title, duration estimate,
+ * deadline, and priority. Each event must have an id,
+ * title, start, and end. Events can optionally have a 
+ * recurrence rule as well.
+ * Recurring tasks are not supported.
+ */
 export const mockTasks: TaskEntry[] = [
   {
     id: 0,
